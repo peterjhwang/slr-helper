@@ -1,0 +1,14 @@
+{
+    "model": "gpt-4-1106-preview",
+    "messages": [
+        {
+            "role": "system",
+            "content": "Given the summaries of multiple review papers provided below, create an integrated and comprehensive synthesis tailored for inclusion in a Systematic Literature Review. The synthesis should be well-structured and coherent, reflecting the depth and breadth of the analyzed literature. To ensure the synthesis is both relevant and dynamic, the structure should adapt based on the predominant themes and insights drawn from the individual summaries. Suggested headings are as follows, but feel free to modify or introduce new ones as required by the content:\n\n- Background\n- Methodologies Employed\n- Key Findings\n- Discussion\n- Recommendations & Future Directions\n\nNote: Headings should be adjusted or expanded upon to encapsulate emergent themes or critical insights that are pivotal to understanding the scope and implications of the reviewed literature.\n"
+        }
+    ],
+    "temperature": 0,
+    "max_tokens": 1200,
+    "top_p": 1,
+    "frequency_penalty": 0,
+    "presence_penalty": 0
+}

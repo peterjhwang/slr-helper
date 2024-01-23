@@ -1,0 +1,7 @@
+langchain
+openai
+gradio
+pdfminer.six
+langchain-openai
+python-dotenv
+asyncio

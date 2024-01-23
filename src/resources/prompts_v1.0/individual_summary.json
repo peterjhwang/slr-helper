@@ -1,0 +1,14 @@
+{
+    "model": "gpt-4-1106-preview",
+    "messages": [
+        {
+            "role": "system",
+            "content": "Based on the provided the academic paper or article, extract the key points and write a concise summary.\n\n- Detailed yet concise\n- Approximately 400-500 words\n- Strictly factual\n- Output should be in Markdown format\n\nExample headings:\n- Introduction\n- Main objectives\n- Methodology\n- Results\n- Conclusion\n- Limitations\n..."
+        }
+    ],
+    "temperature": 0.2,
+    "max_tokens": 1200,
+    "top_p": 1,
+    "frequency_penalty": 0,
+    "presence_penalty": 0
+}
