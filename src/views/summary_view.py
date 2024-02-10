@@ -2,7 +2,7 @@ import gradio as gr
 import logging
 import os
 import asyncio
-from services.summary_services import create_summaries
+from services.summary_service import create_summaries
 
 logger = logging.getLogger(__name__)
 
@@ -20,25 +20,18 @@ def get_summaries(project_id):
 
     # read summary from file
     summary_files = os.listdir(f"data/{project_id}/summaries")
-
-    # get overall summary
-    overall_summary = ""
-    overall_summary_file = f"overall_summary.txt"
-    try:
-        with open(f"data/{project_id}/summaries/" + overall_summary_file, "r") as f:
-            overall_summary = f.read()
-    except Exception as e:
-        logger.error(e)
+    with open(f"data/{project_id}/summaries/{summary_files[0]}", "r") as f:
+        summary = f.read()
     return (
         gr.update(visible=False),
         gr.Markdown(
-            overall_summary,
+            summary,
             label="Project ID",
             visible=True,
         ),
         gr.Dropdown(
             choices=summary_files,
-            value=overall_summary_file,
+            value=summary_files[0],
             visible=True,
             interactive=True,
         ),
@@ -56,7 +49,7 @@ def create_summary_tab(project_id):
     with gr.Row():
         with gr.Column(scale=1):
             summary_button = gr.Button(value="Create Summary")
-            file_select_dropdown = gr.Dropdown(visible=False)
+            file_select_dropdown = gr.Dropdown(label="File", visible=False)
         with gr.Column(scale=5):
             summary_text = gr.Markdown(
                 label="Summary",

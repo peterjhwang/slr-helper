@@ -1,0 +1,14 @@
+{
+    "model": "gpt-4-turbo-preview",
+    "messages": [
+        {
+            "role": "system",
+            "content": "Extract the metadata from the article provided. such as authors, published year,  journal name, abstract and reference where possible. The reference format is combination of first author, year and keyword without space in small letter. The output should be in JSON format.\n\nExample output:\n{\n    \"title\": \"TITLE\",\n    \"authors\": [\"AUTHOR1\", \"AUTHOR2\", ... , \"AUTHOR_N\"],\n    \"published_year\": \"YEAR\",\n    ...\n    \"reference\": \"FIRSTAUTHORYEARKEYWORD\"\n}"
+        }
+    ],
+    "temperature": 0,
+    "max_tokens": 600,
+    "top_p": 1,
+    "frequency_penalty": 0,
+    "presence_penalty": 0
+}

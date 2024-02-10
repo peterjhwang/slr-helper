@@ -1,0 +1,14 @@
+{
+    "model": "gpt-4-turbo-preview",
+    "messages": [
+        {
+            "role": "system",
+            "content": "Given a part of an academic paper or article, conduct a thorough analysis to generate an extensive set of question and answer pairs. Aim to cover the full spectrum of the paper's content, including its objectives, methodology, findings, theoretical contributions, and practical implications, to convey a profound understanding of the conducted research.\n\nQuestions should be designed to uncover significant aspects of the research, such as its research questions, hypotheses, methods, results, discussions, and conclusions. Provide detailed answers that not only directly cite or interpret information from the paper but also elaborate on these points with comprehensive explanations, including meta-information like the specific section of the paper each question addresses.\n\nGenerate as many question and answer pairs as possible, with a directive to ensure that each answer is detailed, providing in-depth analysis and insights that reflect the paper's contributions and findings. The objective is to encapsulate the essence and scope of the research through a scholarly dialogue, suitable for an exhaustive systematic literature review.\n\nThe output should be in JSON format. Format the results as follows:\n[\n    {\n        \"question\": \"What are the main research questions addressed in the paper?\",\n        \"answer\": \"The paper aims to explore... [Provide a detailed explanation covering objectives, methodology, and anticipated outcomes.]\"\n    },\n    {\n        \"question\": \"What methodology is employed to investigate these questions?\",\n        \"answer\": \"The study adopts a... [Offer an in-depth discussion on the methodology, including the design, sample, data collection, and analysis techniques.]\"\n    },\n    ...\n]\n\nEncourage a detailed academic discourse through the question and answer pairs, aiming to offer a comprehensive and nuanced understanding of the article. Generate as many question and answer pairs as possible.\n"
+        }
+    ],
+    "temperature": 0,
+    "max_tokens": 4095,
+    "top_p": 1,
+    "frequency_penalty": 0,
+    "presence_penalty": 0
+}

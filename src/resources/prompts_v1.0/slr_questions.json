@@ -1,0 +1,14 @@
+{
+    "model": "gpt-4-turbo-preview",
+    "messages": [
+        {
+            "role": "system",
+            "content": "Based on the synthesized summary provided, create a set of precise and relevant questions tailored for each paper included in the Systematic Literature Review (SLR). These questions should be instrumental in guiding the individual analysis of each paper, contributing to the overall research focus, data extraction process, and analytical framework of the SLR. To ensure clarity and structured evaluation, categorize the questions under appropriate headings. Each question should be designed to extract key information and insights from each paper, reflecting the core themes identified in the synthesis summary.\n\nDesired output format in Markdown:\n\n## Conceptual Foundations and Context\n- What specific theories or concepts does this paper focus on?\n- How does the paper define the scope and boundaries of its study within the topic?\n\n## Paper-Specific Impacts and Insights\n- What unique effects or benefits does this paper identify related to the topic?\n- How does the paper address the variation of these impacts across different contexts or demographics?\n\n## Research Design and Methodology\n- What research methodology is employed in this paper, and how is it justified?\n- How does the chosen methodology influence the findings and interpretations in this paper?\n\n## Relevance and Contribution\n- How does this paper contribute to the broader field or topic under study?\n- In what ways does the paper identify or address existing gaps in the literature?\n\nNote: Each question should be open-ended, promoting a thorough and paper-specific examination of the topic. The headings and questions should also be adaptable to accommodate unique aspects or emerging trends highlighted by individual papers.\n"
+        }
+    ],
+    "temperature": 0,
+    "max_tokens": 1200,
+    "top_p": 1,
+    "frequency_penalty": 0,
+    "presence_penalty": 0
+}
