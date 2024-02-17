@@ -4,8 +4,6 @@ import json
 import asyncio
 import os
 from pdfminer.high_level import extract_text
-from langchain_openai import ChatOpenAI
-from langchain.schema.messages import ChatMessage
 from utils.llm_helpers import batch, call_openai
 from utils.string_helpers import (
     chunking,

@@ -29,27 +29,28 @@ with gr.Blocks(
     title="Fine-tuning App",
     theme=theme,
 ) as gradio_app:
-    gr.Markdown(
-        f'<div style="text-align: center; font-size: 28px"> LLM Fine-tuning App for SLR </div>'
-    )
+    # gr.Markdown(
+    #     f'<div style="text-align: center; font-size: 28px"> LLM Fine-tuning App for SLR </div>'
+    # )
+    gr.Label(label="Title", value="LLM Fine-tuning App for SLR")
+    gr.Markdown(f'<div style="text-align: right"> Ver. {VERSION} </div>')
     with gr.Row():
         with gr.Column(scale=1):
             reset_button = gr.ClearButton(value="Reset")
             reset_button.click(None, js="window.location.reload()")
-        with gr.Column(scale=1):
-            gr.Markdown(f'<div style="text-align: right"> Ver. {VERSION} </div>')
-            dark_mode_button = gr.Button(
-                value="Toggle Dark Mode", variant="primary", visible=False
-            )
-            dark_mode_button.click(
-                None,
-                js="""
-                () => {
-                    document.body.classList.toggle('dark');
-                    document.querySelector('gradio-app').style.backgroundColor = 'var(--color-background-primary)'
-                }
-                """,
-            )
+        # with gr.Column(scale=1):
+        #     dark_mode_button = gr.Button(
+        #         value="Toggle Dark Mode", variant="primary", visible=True
+        #     )
+        #     dark_mode_button.click(
+        #         None,
+        #         js="""
+        #         () => {
+        #             document.body.classList.toggle('dark');
+        #             document.querySelector('gradio-app').style.backgroundColor = 'var(--color-background-primary)'
+        #         }
+        #         """,
+        #     )
     with gr.Row():
         with gr.Column(scale=1):
             project_name = gr.Textbox(
