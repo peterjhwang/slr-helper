@@ -1,5 +1,6 @@
 import pytest
-from src.utils.string_helpers import calculate_chunk_size
+import uuid
+from src.utils.string_helpers import calculate_chunk_size, generate_unique_uuid
 
 # Define test cases as a list of tuples in the format
 # (total_elements, (expected_chunk_size, expected_num_chunks))
@@ -39,3 +40,22 @@ def test_calculate_chunk_size(total_elements, expected):
     print(
         f"Total Elements: {total_elements}, Expected Chunk Size: {expected_chunk_size}, Calculated Chunk Size: {calculated_chunk_size}, Expected Num Chunks: {expected_num_chunks}, Calculated Num Chunks: {calculated_num_chunks}"
     )
+
+
+def test_generate_unique_uuid():
+    # Create a list with a single UUID
+    existing_uuids = [str(uuid.uuid4())]
+
+    # Generate a new UUID that should not be in the existing_uuids list
+    new_uuid = generate_unique_uuid(existing_uuids)
+
+    # Assert that the new UUID is not in the existing_uuids list
+    assert new_uuid not in existing_uuids
+
+    # Additionally, assert that the new_uuid is a valid UUID format
+    try:
+        uuid_obj = uuid.UUID(new_uuid, version=4)
+        assert str(uuid_obj) == new_uuid
+    except ValueError:
+        # If new_uuid is not a valid UUID, this block will execute
+        assert False, "Generated UUID is not valid"

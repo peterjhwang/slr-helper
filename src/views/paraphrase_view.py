@@ -8,7 +8,7 @@ from services.paraphrase_service import create_paraphrased_questions
 logger = logging.getLogger(__name__)
 
 
-def paraphrase_questions(project_id):
+def paraphrase_questions(project_id, number_of_paraphrased_questions):
     if project_id == "":
         return (
             gr.update(),
@@ -17,7 +17,9 @@ def paraphrase_questions(project_id):
         )
     if not os.path.exists(f"data/{project_id}/dataset"):
         # if summary exists, return summary
-        asyncio.run(create_paraphrased_questions(project_id))
+        asyncio.run(
+            create_paraphrased_questions(project_id, number_of_paraphrased_questions)
+        )
 
     file = os.listdir(f"data/{project_id}/dataset")[0]
     with open(f"data/{project_id}/dataset/{file}", "r") as f:
@@ -53,6 +55,12 @@ def create_paraphrase_question_tab(project_id):
     logger.info("Paraphrase questions tab - " + project_id.value)
     with gr.Row():
         with gr.Column(scale=1):
+            gr.Markdown("Here we may want to generate test set as well.")
+            num_paraphrase_questions = gr.Dropdown(
+                choices=[3, 5, 10, 15, 20],
+                label="Number of Paraphrased Questions",
+                value=10,
+            )
             paraphrase_button = gr.Button(value="Combine & Paraphrase Questions")
             file_select_dropdown = gr.Dropdown(label="File", visible=False)
         with gr.Column(scale=5):
@@ -63,7 +71,7 @@ def create_paraphrase_question_tab(project_id):
 
     paraphrase_button.click(
         fn=paraphrase_questions,
-        inputs=[project_id],
+        inputs=[project_id, num_paraphrase_questions],
         outputs=[paraphrase_button, total_qna_json, file_select_dropdown],
     )
 

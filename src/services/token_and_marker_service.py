@@ -7,6 +7,7 @@ from utils.file_helpers import save_tuples_as_csv
 def create_training_dataset(project_id, special_token):
     final_training_data = []
     metadata_dict = json.loads(Path(f"data/{project_id}/metadata.json").read_text())
+    metadata_dict["combined_slr_qna.pdf"] = {"reference": "overallslr"}
     for file in os.listdir(f"data/{project_id}/dataset"):
         if file.endswith(".json"):
             original_file = file.replace(".json", ".pdf")

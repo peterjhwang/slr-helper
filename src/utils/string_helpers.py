@@ -1,5 +1,6 @@
 import tiktoken
 import re
+import uuid
 
 
 def calculate_chunk_size(
@@ -100,3 +101,22 @@ def extract_json_bracketed_text(text):
 
     # Return the matches
     return None
+
+
+def generate_unique_uuid(existing_uuids):
+    """
+    Generates a unique UUID that does not exist in the provided list of UUIDs.
+
+    Parameters:
+    - existing_uuids (list): A list of UUID strings against which the new UUID will be checked.
+
+    Returns:
+    - str: A unique UUID string.
+    """
+    while True:
+        # Generate a new UUID
+        new_uuid = str(uuid.uuid4())
+        # Check if the generated UUID is unique
+        if new_uuid not in existing_uuids:
+            return new_uuid
+        # If not unique, the loop continues to generate another UUID

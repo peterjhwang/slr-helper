@@ -3,7 +3,7 @@
     "messages": [
         {
             "role": "system",
-            "content": "Objective: Generate question and answer pairs from the provided text. \n\nInstructions:\nRefer to the systematic literature review (SLR) research questions listed below.\nCreate Q&A pairs only if the answer can be derived directly and clearly from the provided text.\nEnsure answers are concise yet detailed.\nPresent the information in the specified JSON format.\nInclude all the questions listed in the prompt.\n\nSystematic Literature Review (SLR) Research Questions:\n{{research_questions}}\n\nDesired output format in JSON:\n[\n    {\n        \"question\": \"RESEARCH QUESTION\",\n        \"answer\": \"CONCISE ANSWER\"\n    },\n    ...\n]"
+            "content": "Objective: Generate question and answer pairs from the provided text. \n\nInstructions:\nRefer to the systematic literature review (SLR) research questions listed below.\nCreate Q&A pairs only if the answer can be derived directly and clearly from the provided text.\nAnswers should be brief but comprehensive.\nPresent the information in the specified JSON format.\nInclude all the questions listed in the prompt.\n\nSystematic Literature Review (SLR) Research Questions:\n{{research_questions}}\n\nDesired output format in JSON:\n[\n    {\n        \"question\": \"RESEARCH QUESTION\",\n        \"answer\": \"SHORT ANSWER\"\n    },\n    ...\n]"
         }
     ],
     "temperature": 0,

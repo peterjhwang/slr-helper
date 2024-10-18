@@ -7,6 +7,7 @@ from services.slr_level_service import (
     create_slr_summary,
     create_slr_questions,
     create_slr_qna,
+    created_combined_slr_qna,
 )
 
 logger = logging.getLogger(__name__)
@@ -68,33 +69,39 @@ def update_slr_questions(project_id, slr_questions):
 
 def update_slr_json(project_id, slr_qna_file_dropdown):
     file = slr_qna_file_dropdown
-    with open(f"data/{project_id}/slr-level/{file}", "r") as f:
+    with open(f"data/{project_id}/slr-level/individual/{file}", "r") as f:
         slr_qna = json.load(f)
     return gr.update(value=slr_qna)
 
 
 def load_slr_qna(project_id):
-    slr_qla_files = [
-        file for file in os.listdir(f"data/{project_id}/slr-level") if ".json" in file
-    ]
-    if len(slr_qla_files) == 0:
+    if not os.path.exists(f"data/{project_id}/slr-level/individual"):
         asyncio.run(create_slr_qna(project_id))
-        # reload
-        slr_qla_files = [
-            file
-            for file in os.listdir(f"data/{project_id}/slr-level")
-            if ".json" in file
-        ]
+
+    slr_qla_files = [
+        file
+        for file in os.listdir(f"data/{project_id}/slr-level/individual")
+        if ".json" in file
+    ]
     logger.info("SLR Q&A " + str(len(slr_qla_files)) + " files found")
     logger.info("\n".join(slr_qla_files))
     file = slr_qla_files[0]
-    with open(f"data/{project_id}/slr-level/{file}", "r") as f:
+    with open(f"data/{project_id}/slr-level/individual/{file}", "r") as f:
         slr_qna = json.load(f)
     return (
         gr.update(visible=False),
         gr.Dropdown(choices=slr_qla_files, value=file, visible=True),
         gr.JSON(slr_qna, visible=True),
+        gr.update(visible=True),
     )
+
+
+def combine_slr_qna(project_id):
+    if not os.path.exists(f"data/{project_id}/slr-level/combined_slr_qna.json"):
+        asyncio.run(created_combined_slr_qna(project_id))
+    with open(f"data/{project_id}/slr-level/combined_slr_qna.json", "r") as f:
+        data = json.load(f)
+    return gr.JSON(data, visible=True)
 
 
 def create_slr_tab(project_id):
@@ -119,13 +126,22 @@ def create_slr_tab(project_id):
         update_slr_question_button = gr.Button(
             value="Update SLR Questions", visible=False
         )
-    with gr.Tab("SLR Q&A"):
+    with gr.Tab("SLR Q&A Per File"):
         with gr.Row():
             with gr.Column(scale=1):
                 slr_qna_button = gr.Button(value="Create SLR Q&A", visible=False)
                 slr_qna_file_dropdown = gr.Dropdown(label="File", visible=False)
             with gr.Column(scale=5):
                 slr_qna_json = gr.JSON(visible=False)
+
+    with gr.Tab("SLR Combined Q&A"):
+        with gr.Row():
+            with gr.Column(scale=1):
+                slr_combined_qna_button = gr.Button(
+                    value="Combine SLR Q&A", visible=False
+                )
+            with gr.Column(scale=5):
+                slr_combined_qna_json = gr.JSON(visible=False)
 
     slr_button.click(
         fn=create_slr_summary_questions,
@@ -147,11 +163,24 @@ def create_slr_tab(project_id):
     slr_qna_button.click(
         fn=load_slr_qna,
         inputs=[project_id],
-        outputs=[slr_qna_button, slr_qna_file_dropdown, slr_qna_json],
+        outputs=[
+            slr_qna_button,
+            slr_qna_file_dropdown,
+            slr_qna_json,
+            slr_combined_qna_button,
+        ],
     )
 
     slr_qna_file_dropdown.change(
         fn=update_slr_json,
         inputs=[project_id, slr_qna_file_dropdown],
         outputs=[slr_qna_json],
+    )
+
+    slr_combined_qna_button.click(
+        fn=combine_slr_qna,
+        inputs=[project_id],
+        outputs=[
+            slr_combined_qna_json,
+        ],
     )

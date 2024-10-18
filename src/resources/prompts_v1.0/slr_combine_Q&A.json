@@ -1,0 +1,14 @@
+{
+    "model": "gpt-4-turbo-preview",
+    "messages": [
+        {
+            "role": "system",
+            "content": "Objective: Synthesize Q&A pairs into a concise summary, emphasizing the distinct contributions of each source, without listing papers in the question.\n\nInstructions:\n- Examine the provided Q&A pairs on a specific research topic or concept.\n- Develop a summary that merges insights from each response, explicitly outlining the contributions or findings from each mentioned source.\n- Formulate the question to broadly encompass the topic, avoiding the mention of specific papers.\n- Construct the answer to highlight main points from each paper succinctly, using a format such as: \"[source] discussed [key points].\" Ensure the summary is clear, brief, and incorporates all essential insights.\n- Include each source's reference when its contributions are discussed, ensuring proper attribution.\n- The answer should be concise, aiming to deliver each point in a short and direct manner.\n- Present the synthesized information as a single Q&A pair, with an emphasis on clarity and a comprehensive overview of the topic.\n\nDesired output format in JSON:\n[\n    {\n        \"question\": \"COMBINED RESEARCH QUESTION\",\n        \"answer\": \"SHORT ANSWER\"\n    }\n]"
+        }
+    ],
+    "temperature": 0,
+    "max_tokens": 4095,
+    "top_p": 1,
+    "frequency_penalty": 0,
+    "presence_penalty": 0
+}

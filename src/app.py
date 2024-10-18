@@ -13,16 +13,17 @@ from views.metadata_view import create_metadata_tab
 from views.paper_level_view import create_paper_tab
 from views.section_level_view import create_section_tab
 from views.paraphrase_view import create_paraphrase_question_tab
-from views.token_and_marker_view import create_token_and_marker_view
+from views.token_and_marker_view import create_token_and_marker_tab
+from views.test_data_view import test_data_tab
 
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s",
     handlers=[logging.StreamHandler(sys.stdout)],
 )
-theme = gr.Theme.from_hub("finlaymacklon/smooth_slate")
+theme = gr.Theme.from_hub("JohnSmith9982/small_and_pretty")
 
 with gr.Blocks(
     css="footer{display:none !important}",
@@ -79,7 +80,9 @@ with gr.Blocks(
     with gr.Tab("6. Paraphrase Questions"):
         create_paraphrase_question_tab(project_id)
     with gr.Tab("7. Add Token and Marker"):
-        create_token_and_marker_view(project_id)
+        create_token_and_marker_tab(project_id)
+    with gr.Tab("8. Generate Test Set"):
+        test_data_tab(project_id)
 
 gradio_app.launch(server_name="0.0.0.0")
 gradio_app.close()

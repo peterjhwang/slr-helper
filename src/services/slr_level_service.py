@@ -1,6 +1,7 @@
 import logging
 import json
 import os
+import copy
 from pathlib import Path
 import asyncio
 from pdfminer.high_level import extract_text
@@ -68,7 +69,9 @@ async def create_slr_questions(project_id):
 
 
 async def create_slr_qna(project_id):
-    batch_size = 1
+    batch_size = 2
+    # create folder
+    os.makedirs(f"data/{project_id}/slr-level/individual", exist_ok=True)
 
     # create files
     model_params = json.loads(
@@ -116,17 +119,111 @@ async def create_slr_qna(project_id):
             )
         results += await asyncio.gather(*coroutines)
 
-    slr_qna_result = {
-        filename: json.loads(
-            result.choices[0]
-            .message.content.replace("```json", "")
-            .replace("```", "")
-            .strip()
-        )
-        for filename, result in zip(prompt_dict.keys(), results)
-    }
+    slr_qna_result = {}
+    for filename, result in zip(prompt_dict.keys(), results):
+        try:
+            qna = json.loads(
+                result.choices[0]
+                .message.content.replace("```json", "")
+                .replace("```", "")
+                .strip()
+            )
+        except Exception as e:
+            logger.error(f"Error parsing the result for {filename}")
+            logger.error(result.choices[0].message.content)
+            logger.error(e)
+            qna = []
+        slr_qna_result[filename] = qna
+        if len(qna) != len(slr_questions):
+            logger.warning(
+                f"Length of Q&A does not match the length of questions - {filename}"
+            )
+
     for file, slr_json in slr_qna_result.items():
         with open(
-            f"data/{project_id}/slr-level/{file.replace('.pdf', '.json')}", "w"
+            f"data/{project_id}/slr-level/individual/{file.replace('.pdf', '.json')}",
+            "w",
         ) as f:
             json.dump(slr_json, f, indent=4)
+
+
+async def created_combined_slr_qna(project_id):
+    batch_size = 5
+
+    # load files
+    slr_qla_files = [
+        file
+        for file in os.listdir(f"data/{project_id}/slr-level/individual")
+        if ".json" in file
+    ]
+    all_qna_dict = {}
+    for file in slr_qla_files:
+        with open(f"data/{project_id}/slr-level/individual/{file}", "r") as f:
+            slr_qna = json.load(f)
+        all_qna_dict[file] = slr_qna
+
+    # check if all files have the same length
+    length = 0
+    for k, v in all_qna_dict.items():
+        if length == 0:
+            length = len(v)
+        if length != len(v):
+            logger.warning(
+                f"Length of Q&A does not match the length of questions - {k}"
+            )
+
+    # combine
+    model_params = json.loads(
+        Path("src/resources/prompts_v1.0/slr_combine_Q&A.json").read_text()
+    )
+    logger.info("SLR Combine Q&A param\n" + json.dumps(model_params, indent=4))
+    system_prompt = model_params["messages"][0]["content"]
+    with open(f"data/{project_id}/metadata.json", "r") as f:
+        metadata = json.load(f)
+
+    prompt_dict = {}
+    for idx in range(length):
+        qna_list = []
+        for file, qna in all_qna_dict.items():
+            original_filename = file.replace(".json", ".pdf")
+            source = metadata[original_filename]["reference"]
+            new_qna_dict = copy.deepcopy(qna[idx])
+            new_qna_dict["answer"] = f"{new_qna_dict['answer']} Source: {source}"
+            qna_list.append(new_qna_dict)
+        prompt_dict[idx] = qna_list
+    # with open(f"data/{project_id}/slr-level/temp.json", "w") as f:
+    #     json.dump(prompt_dict, f, indent=4)
+    results = []
+    for batch in create_batches(prompt_dict, batch_size):
+        coroutines = []
+        for idx, user_prompt in batch.items():
+            # logger.info("User Prompt:\n" + json.dumps(user_prompt, indent=4))
+            coroutines.append(
+                call_openai(
+                    system_prompt,
+                    json.dumps(user_prompt, indent=4),
+                    model=model_params["model"],
+                    temperature=model_params["temperature"],
+                    max_tokens=model_params["max_tokens"],
+                    logger=logger,
+                )
+            )
+        results += await asyncio.gather(*coroutines)
+    combined_qna = []
+    for filename, result in zip(prompt_dict.keys(), results):
+        try:
+            qna = json.loads(
+                result.choices[0]
+                .message.content.replace("```json", "")
+                .replace("```", "")
+                .strip()
+            )
+        except Exception as e:
+            logger.error(f"Error parsing the result for {filename}")
+            logger.error(result.choices[0].message.content)
+            logger.error(e)
+            qna = []
+        combined_qna += qna
+
+    with open(f"data/{project_id}/slr-level/combined_slr_qna.json", "w") as f:
+        json.dump(combined_qna, f, indent=4)

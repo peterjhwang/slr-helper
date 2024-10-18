@@ -57,7 +57,7 @@ def download_training_data(project_id):
     )
 
 
-def create_token_and_marker_view(project_id):
+def create_token_and_marker_tab(project_id):
     logger.info("Creating summary tab - " + project_id.value)
     with gr.Row():
         with gr.Column(scale=1):
